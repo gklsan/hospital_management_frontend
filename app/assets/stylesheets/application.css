@@ -1,0 +1,35 @@
+/*
+ *= require jquery-tablesorter/theme.grey
+ */
+
+
+.square {
+    float: left;
+    position: relative;
+    width: 48%;
+    padding-bottom: 10%;
+    margin: 0%;
+    background-position: center center;
+    background-repeat: no-repeat;
+    /*border: 1px solid red;*/
+    background-size: cover;
+    min-height: 540px !important;
+}
+
+table {
+    text-align: center;
+}
+
+.actions{
+    float: right;
+}
+
+h2 {
+    text-align: center;
+    padding: 8% 0;
+}
+
+table thead tr {
+    background-color: midnightblue;
+    color: white;
+}

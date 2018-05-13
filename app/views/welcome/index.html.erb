@@ -1,0 +1,202 @@
+<% url = "http://#{ENV["FRONT_END"]}" %>
+<%= puts url %>
+
+<div class="square" style="background-color: #ffffff;">
+  <h2 >PATIENT</h2>
+  <form id="patient" action="<%= url %>/api/patients" accept-charset="UTF-8" data-remote="true" method="post">
+    <!--    <input name="utf8" type="hidden" value="✓"><input type="hidden" name="authenticity_token" value="UNer+W0fI/zxTzSp5+izZB9BrllQpZK8sHmYRmygB2N7IvAdeNYHSQy9gCfA3t6x/GnWmVJTMcKYbpHFImsssw==">-->
+    <div class="field form-group">
+      <label for="patient_name">Name</label>
+      <input id="patient_name" class="form-control" required="required" type="text" name="patient[name]">
+      <input id="patient_url" class="form-control" required="required" type="hidden" name="patient_url" value="<%= url %>/api/patients">
+    </div>
+
+    <div class="field form-group">
+      <label for="phone">Phone</label>
+      <input id="phone" class="form-control" required="required" type="tel" name="patient[phone]">
+    </div>
+
+    <div class="actions">
+      <input type="submit" name="commit" value="Submit" class="btn btn-primary" data-disable-with="Submit">
+    </div>
+  </form>
+</div>
+
+
+
+<div class="square" style="background-color: #EFEFEF;">
+  <h2>DOCTOR</h2>
+  <form id="doctor" action="<%= url %>/api/doctors" accept-charset="UTF-8" data-remote="true" method="post">
+    <!--<input name="utf8" type="hidden" value="✓"><input type="hidden" name="authenticity_token" value="UNer+W0fI/zxTzSp5+izZB9BrllQpZK8sHmYRmygB2N7IvAdeNYHSQy9gCfA3t6x/GnWmVJTMcKYbpHFImsssw==">-->
+    <div class="field form-group">
+      <label for="doctor_name">Name</label>
+      <input id="doctor_name" class="form-control" required="required" type="text" name="doctor[name]">
+      <input id="doctor_url" class="form-control" required="required" type="hidden" name="doctor_url" value="<%= url %>/api/doctors">
+    </div>
+
+    <div class="field form-group">
+      <label for="phone">Phone</label>
+      <input id="phone" class="form-control" required="required" type="tel" name="doctor[phone]">
+    </div>
+
+    <div class="field form-group">
+      <label for="specialization">Specialization</label>
+      <input id="specialization" class="form-control" required="required" type="tel" name="doctor[specialization]">
+    </div>
+
+    <div class="actions">
+      <input type="submit" name="commit" value="Submit" class="btn btn-primary" data-disable-with="Submit">
+    </div>
+  </form>
+</div>
+
+
+
+
+
+
+<div class="square" style="background-color: #EFEFEF;">
+  <h2>APPOINTMENT</h2>
+  <form id="appointment" action="<%= url %>/api/appointments" accept-charset="UTF-8" data-remote="true" method="post">
+    <!--<input name="utf8" type="hidden" value="✓"><input type="hidden" name="authenticity_token" value="UNer+W0fI/zxTzSp5+izZB9BrllQpZK8sHmYRmygB2N7IvAdeNYHSQy9gCfA3t6x/GnWmVJTMcKYbpHFImsssw==">-->
+    <input id="appointment_url" class="form-control" required="required" type="hidden" name="appointment_url" value="<%= url %>/api/appointments">
+
+    <div class="field form-group">
+      <label for="doctor_id">Doctor</label>
+      <select class="form-control" id="doctor_id" name="appointment[doctor_id]"></select>
+      </div>
+
+    <div class="field form-group">
+      <label for="patient_id">Patient</label>
+      <select class="form-control" id="patient_id" name="appointment[patient_id]"></select>
+    </div>
+
+    <div class="field form-group">
+      <label for="disease">Disease</label>
+      <input id="disease" class="form-control" required="required" type="text" name="appointment[disease]">
+    </div>
+
+    <div class="actions">
+      <input type="submit" name="commit" value="Submit" class="btn btn-primary" data-disable-with="Submit">
+    </div>
+  </form>
+</div>
+
+
+
+
+<div class="square" style="background-color: #ffffff;">
+  <h2>View Appointments</h2>
+  <table class="table table-striped patient_table">
+    <thead>
+    <tr>
+      <th>Doctor</th>
+      <th>Patient</th>
+      <th>Disease</th>
+    </tr>
+    </thead>
+    <tbody data-bind="foreach: datas">
+    <tr>
+      <td data-bind="text: doctor"></td>
+      <td data-bind="text: patient "></td>
+      <td data-bind="text: disease "></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+  $(document).ready(function(){
+      get_appoinment_list();
+      get_patient_and_doctor_list();
+
+      $("form input[type=submit]").on("click", function(e){
+          e.preventDefault();
+          var form = $(this).closest("form");
+          var formId = form.attr("id");
+          $.ajax({
+              url: form.attr("action"),
+              dataType: 'json',
+              type: "post",
+              data: form.serialize(),
+          }).done(function (data) {
+              flash_success_alert(formId + " created successfully.");
+              if(formId === 'appointment') {
+                  window.location.reload();
+              }
+          }).fail(function (data) {
+              flash_error_alert(data);
+          });
+    });
+
+    function get_appoinment_list() {
+        $.ajax({
+            url: "<%= url %>/api/appointments",
+            dataType: 'json'
+        }).done(function (data) {
+            console.log(data);
+            ko.applyBindings({
+                datas: data
+            });
+        }).fail(function (data) {
+            flash_error_alert(data);
+        });
+    }
+
+    function get_patient_and_doctor_list() {
+        $.ajax({
+            url: "<%= url %>/api/doctors",
+            dataType: 'json'
+        }).done(function (data) {
+            res = [];
+            for (key in data) {
+                res.push("<option value='" + data[key].id + "'>" + data[key].name + "</option>");
+            }
+            $("select#doctor_id").replaceWith("<select class=\"form-control\" id=\"doctor_id\"  name=\"appointment[doctor_id]\">>" + res + "</select>");
+        }).fail(function (data) {
+            flash_error_alert(data);
+        });
+
+        $.ajax({
+            url: "<%= url %>/api/patients",
+            dataType: 'json'
+        }).done(function (data) {
+            res = [];
+            for (key in data) {
+                res.push("<option value='" + data[key].id + "'>" + data[key].name + "</option>");
+            }
+            $("select#patient_id").replaceWith("<select class=\"form-control\" id=\"patient_id\"  name=\"appointment[patient_id]\">>" + res + "</select>");
+        }).fail(function (data) {
+            flash_error_alert(data);
+        });
+    }
+
+    function flash_success_alert(message){
+        data = (message.charAt(0).toUpperCase() + message.slice(1));
+        msg = "<div class=\"alert alert-success alert-dismissible\">\n" +
+        " <a href=\"#\" class=\"close\" data-dismiss=\"alert\" aria-label=\"close\">&times;</a>\n" +
+          data + " \n </div>";
+        // $("#notice").append(msg);
+        alert(data);
+    }
+
+    function flash_error_alert(data) {
+        var responseText = jQuery.parseJSON(data.responseText);
+        var message = [];
+        for (key in responseText) {
+            key_data = (key.charAt(0).toUpperCase() + key.slice(1));
+            message.push("<div class=\"alert alert-danger alert-dismissible\">\n" +
+                " <a href=\"#\" class=\"close\" data-dismiss=\"alert\" aria-label=\"close\">&times;</a>\n" +
+                key_data + " " + responseText[key] + " \n </div>");
+        }
+        $("#notice").append(message);
+    }
+  });
+</script>
+
+
+<style>
+  div.field, .actions {
+    padding: 0 14%;
+  }
+</style>
