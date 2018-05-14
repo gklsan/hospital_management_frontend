@@ -114,10 +114,10 @@
               data: form.serialize(),
           }).done(function (data) {
               flash_success_alert(formId + " created successfully.");
-              $("input[type=text], input[type=tel]").val("");
-              if(formId === 'appointment') {
+              // $("input[type=text], input[type=tel]").val("");
+              // if(formId === 'appointment') {
                   window.location.reload();
-              }
+              // }
           }).fail(function (data) {
               flash_error_alert(data);
           });
