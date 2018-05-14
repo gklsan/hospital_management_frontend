@@ -6,7 +6,7 @@ APPLICATION_PATH=/home/gklsan/workspace/practice
 APP_NAME=hospital_management_frontend
 APP_ENV=$1
 RUN_TYPE=$2
-FRONT_END=172.17.0.3:8000
+FRONT_END=http://172.17.0.3:8000
 
 #Stop the docker 
 docker stop $APP_NAME

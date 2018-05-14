@@ -13,7 +13,7 @@
 
     <div class="field form-group">
       <label for="phone">Phone</label>
-      <input id="phone" class="form-control" required="required" type="tel" name="patient[phone]">
+      <input type="number" id="phone" maxlength="10" class="form-control" type="number" required="required" name="patient[phone]">
     </div>
 
     <div class="actions">
@@ -21,7 +21,6 @@
     </div>
   </form>
 </div>
-
 
 
 <div class="square" style="background-color: #EFEFEF;">
@@ -36,12 +35,12 @@
 
     <div class="field form-group">
       <label for="phone">Phone</label>
-      <input id="phone" class="form-control" required="required" type="tel" name="doctor[phone]">
+      <input type="number" id="phone" maxlength="10" class="form-control" type="number" required="required" name="doctor[phone]">
     </div>
 
     <div class="field form-group">
       <label for="specialization">Specialization</label>
-      <input id="specialization" class="form-control" required="required" type="tel" name="doctor[specialization]">
+      <input id="specialization" class="form-control" required="required" type="text" name="doctor[specialization]">
     </div>
 
     <div class="actions">
@@ -49,10 +48,6 @@
     </div>
   </form>
 </div>
-
-
-
-
 
 
 <div class="square" style="background-color: #EFEFEF;">
@@ -81,8 +76,6 @@
     </div>
   </form>
 </div>
-
-
 
 
 <div class="square" style="background-color: #ffffff;">
@@ -121,6 +114,7 @@
               data: form.serialize(),
           }).done(function (data) {
               flash_success_alert(formId + " created successfully.");
+              $("input[type=text], input[type=tel]").val("");
               if(formId === 'appointment') {
                   window.location.reload();
               }
@@ -190,6 +184,12 @@
                 key_data + " " + responseText[key] + " \n </div>");
         }
         $("#notice").append(message);
+        topFunction();
+    }
+
+    function topFunction() {
+        document.body.scrollTop = 0; // For Chrome, Safari and Opera
+        document.documentElement.scrollTop = 0; // For IE and Firefox
     }
   });
 </script>
